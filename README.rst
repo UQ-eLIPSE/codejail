@@ -85,6 +85,7 @@ Other details here that depend on your configuration:
     $ sudo adduser --disabled-login sandbox --ingroup sandbox
 
 4. Let the web server run the sandboxed Python as sandbox.  Create the file
+    **Note: SENDENV should be a absolute path, e.g. /home/...**
    `/etc/sudoers.d/01-sandbox`::
 
     $ sudo visudo -f /etc/sudoers.d/01-sandbox
