@@ -1,6 +1,20 @@
 CodeJail
 ========
 
+How is this fork different
+--------------------------
+
+This fork is designed to work with minimum configuration for running python3 code, particularly:
+
+#) Easier installing
+
+#) Out of the box python3 support
+
+#) Specific documentation for hosting on EAIT infrastructure
+
+About
+-----
+
 CodeJail manages execution of untrusted code in secure sandboxes. It is
 designed primarily for Python execution, but can be used for other languages as
 well.
