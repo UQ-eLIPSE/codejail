@@ -51,6 +51,12 @@ typically the account 'sandbox.'
 Installation
 ------------
 
+Start by cloning this repo, `cd` into it and run::
+    
+    $ pip install -e .
+
+This will install the package globally, **note this must be done using python 2, thus pip2**
+
 These instructions detail how to configure your operating system so that
 CodeJail can execute Python code safely.  You can run CodeJail without these
 steps, and you will have an unsafe CodeJail.  This is fine for developers'
