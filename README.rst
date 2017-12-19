@@ -181,14 +181,18 @@ the rights to modify the files in its site-packages directory.
 
 3. Re-enable AppArmor for your sandbox::
 
-    $ sudo aa-enforce /etc/apparmor.d/home.chris.ve.myproj-sandbox.bin.python
+    $ sudo aa-enforce /etc/apparmor.d/sandbox.bin.python3
 
 
 Tests
 -----
 
+**NOTE: The tests requires a python2 virtualenv environment**
+
 Run the tests with the Makefile::
 
+    $ export CODEJAIL_TEST_VENV="/sandbox/"
+    $ export CODEJAIL_TEST_USER="root"
     $ pip install -r dev-requirements.txt
     $ make test
 
