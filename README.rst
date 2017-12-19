@@ -244,3 +244,13 @@ For backwards compatibility, the methods ``codejail.Jail.jail_code`` and
 (``codejail.jail_code.jail_code`` and ``codejail.safe_exec.safe_exec``) that take
 in an extra argument which is a string naming the configured Jail object
 (``"python"`` in the above examples).
+
+Known Bugs
+----------
+
+#) Error when running ``site.py``
+
+Comment out line 684 (The user site packages)
+
+The bug is probably caused by the user not having a home directory
+
