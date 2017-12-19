@@ -90,14 +90,14 @@ Other details here that depend on your configuration:
 
 1. Create the new virtualenv::
 
-    $ sudo virtualenv <SANDENV>
+    $ sudo virtualenv --python=python3 <SANDENV>
 
 2. (Optional) If you have particular packages you want available to your
    sandboxed code, install them by activating the sandbox virtual env, and
    using pip to install them::
 
     $ source <SANDENV>/bin/activate
-    $ pip install -r sandbox-requirements.txt
+    $ pip3 install -r sandbox-requirements.txt
 
 3. Add a sandbox user::
 
@@ -110,21 +110,21 @@ Other details here that depend on your configuration:
 
     $ sudo visudo -f /etc/sudoers.d/01-sandbox
 
-    <SANDBOX_CALLER> ALL=(sandbox) SETENV:NOPASSWD:<SANDENV>/bin/python
+    <SANDBOX_CALLER> ALL=(sandbox) SETENV:NOPASSWD:<SANDENV>/bin/python3
     <SANDBOX_CALLER> ALL=(sandbox) SETENV:NOPASSWD:/usr/bin/find
     <SANDBOX_CALLER> ALL=(ALL) NOPASSWD:/usr/bin/pkill
 
 5. Edit an AppArmor profile.  This is a text file specifying the limits on the
    sandboxed Python executable.  The file must be in `/etc/apparmor.d` and must
    be named based on the executable, with slashes replaced by dots.  For
-   example, if your sandboxed Python is at `/home/chris/ve/myproj-sandbox/bin/python`,
-   then your AppArmor profile must be `/etc/apparmor.d/home.chris.ve.myproj-sandbox.bin.python`::
+   example, if your sandboxed Python is at `/sandbox/bin/python3`,
+   then your AppArmor profile must be `/etc/apparmor.d/sandbox.bin.python3`::
 
-    $ sudo vim /etc/apparmor.d/home.chris.ve.myproj-sandbox.bin.python
+    $ sudo vim /etc/apparmor.d/sandbox.bin.python3
 
     #include <tunables/global>
 
-    <SANDENV>/bin/python {
+    <SANDENV>/bin/python3 {
         #include <abstractions/base>
         #include <abstractions/python>
 
@@ -189,7 +189,8 @@ Tests
 
 Run the tests with the Makefile::
 
-    $ make tests
+    $ pip install -r dev-requirements.txt
+    $ make test
 
 If CodeJail is running unsafely, many of the tests will be automatically
 skipped, or will fail, depending on whether CodeJail thinks it should be in

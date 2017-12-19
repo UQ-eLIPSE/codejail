@@ -1,4 +1,4 @@
 #!/bin/sh
 
 # Installs the required dependencies for Ubuntu
-sudo apt install python-pip virtualenv
+sudo apt install python-pip virtualenv python-setuptools
