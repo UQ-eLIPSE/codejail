@@ -111,6 +111,10 @@ python3 = Language(
         class DevNull:
             def write(self, *args, **kwargs):
                 pass
+
+            def flush(self, *args, **kwargs):
+                pass
+
         sys.stdout = DevNull()
         code, g_dict = json.load(sys.stdin)
         %(python_path)s
