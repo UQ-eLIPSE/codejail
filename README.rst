@@ -8,7 +8,30 @@ This fork is designed to work with minimum configuration for running python3 cod
 
 #) Easier installing
 
-#) Out of the box python3 support
+#) Out of the box python3.6 support
+
+REST API
+--------
+
+This version of CodeJail ships with a simple Flask REST API, primarily for use with
+the mypytutor system.
+
+To use the REST API in development mode, run ``run.sh``. The format for running code
+is as follows::
+
+    {
+        "files": {
+            "test.py": "# The content of the python script"
+        }
+    }
+
+``test.py`` is the entrypoint of the program and additional files can be included
+the file object as required.
+
+Here is a sample post request::
+
+    $ curl -d '{"files": {"test.py": "print(\"Hello world!\")"}}' -H "Content-Type: application/json" -X POST http://localhost:5000/run
+
 
 About
 -----
