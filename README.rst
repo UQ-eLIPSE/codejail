@@ -10,8 +10,6 @@ This fork is designed to work with minimum configuration for running python3 cod
 
 #) Out of the box python3 support
 
-#) Specific documentation for hosting on EAIT infrastructure
-
 About
 -----
 
@@ -152,8 +150,8 @@ commands at your Python terminal:
 .. code:: python
 
     import codejail
-    jail = codejail.configure('python', '<SANDENV>/bin/python')
-    jail = codejail.get_codejail('python')  # this works anytime after configuration has happened
+    jail = codejail.configure('python3', '<SANDENV>/bin/python3')
+    jail = codejail.get_codejail('python3')  # this works anytime after configuration has happened
     jail.safe_exec("import os\nos.system('ls /etc')", {})
 
 This should fail with a SafeExecException.  Similarly, the following will
@@ -254,3 +252,8 @@ Comment out line 684 (The user site packages)
 
 The bug is probably caused by the user not having a home directory
 
+#) Installing Python3.6 on Ubuntu 16.04
+
+There are issues with using Python 3.6 on Ubuntu 16.04, the easiest solution is to just a newer version
+
+The `ppa:deadsnakes/ppa` might work, but I haven't been successful
