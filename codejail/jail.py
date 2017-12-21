@@ -12,7 +12,7 @@ from .exceptions import JailError, SafeExecException
 from . import languages
 from . import limits
 from .proxy import run_subprocess_through_proxy
-from .subproc import run_subprocess
+from .subproc import run_subprocess, run_subprocess_and_capture
 from .util import json_safe, temp_directory
 
 log = logging.getLogger("codejail")
@@ -174,7 +174,7 @@ class Jail(object):
             raise JailError("Returned value was not a JSON object: {!r}".format(response.stdout))
         globals_dict.update(resulting_globals)
 
-    def jail_code(self, code=None, files=None, extra_files=None, argv=None, stdin=None, slug=None):
+    def jail_code(self, code=None, files=None, extra_files=None, argv=None, stdin=None, slug=None, isGui=False):
         """
         Run code in the current jail.
 
@@ -266,6 +266,8 @@ class Jail(object):
                 use_proxy = int(os.environ.get("CODEJAIL_PROXY", "0"))
             if use_proxy:
                 run_subprocess_fn = run_subprocess_through_proxy
+            elif isGui:
+                run_subprocess_fn = run_subprocess_and_capture
             else:
                 run_subprocess_fn = run_subprocess
 
@@ -282,6 +284,10 @@ class Jail(object):
             # Remove the tmptmp directory as the sandbox user since the sandbox
             # user may have written files that the application user can't
             # delete.
+            if use_proxy:
+                run_subprocess_fn = run_subprocess_through_proxy
+            else:
+                run_subprocess_fn = run_subprocess
             run_subprocess_fn(self._build_rm_command(tmptmp), cwd=homedir)
 
         return result

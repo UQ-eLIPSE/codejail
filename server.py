@@ -16,7 +16,6 @@ app = Flask(__name__)
 def run_code():
     extra_files = request.get_json()["files"]
 
-    print(extra_files.keys())
     # Convert to a tuple, python2 syntax
     extra_files = [(str(k),str(v)) for k,v in extra_files.iteritems()] 
 

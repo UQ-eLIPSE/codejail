@@ -7,18 +7,18 @@ import resource
 import subprocess
 import threading
 import time
+import xvfbwrapper
 
 log = logging.getLogger("codejail")
 
-
-def run_subprocess(
-    cmd, stdin=None, cwd=None, env=None, rlimits=None, realtime=None,
-    slug=None,
+def run_subprocess_and_capture(
+    cmd, stdin=None, cwd=None, env={}, rlimits=None, realtime=None,
+    slug=None, image="out.png"
 ):
     """
-    A helper to make a limited subprocess.
+    a helper to make a limited subprocess with GUI capture functionality
 
-    `cmd`, `cwd`, and `env` are exactly as `subprocess.Popen` expects.
+    `cmd`, `cwd`, and `env` are exactly as `subprocess.popen` expects.
 
     `stdin` is the data to write to the stdin of the subprocess.
 
@@ -29,10 +29,71 @@ def run_subprocess(
 
     `slug` is a short identifier for use in log messages.
 
-    This function waits until the process has finished executing before
+    `image` the filename of the image to save
+
+    this function waits until the process has finished executing before
     returning.
 
-    Returns a tuple of three values: the exit status code of the process, and
+    returns a tuple of three values: the exit status code of the process, and
+    the stdout and stderr of the process, as strings.
+
+    """
+
+    TIMEOUT = 1
+
+    with xvfbwrapper.Xvfb() as display:
+
+        # Set the display variable
+        display_num = display.new_display
+        env["DISPLAY"] = ":{}".format(display_num)
+
+        subproc = subprocess.Popen(
+            cmd, cwd=cwd, env=env,
+            preexec_fn=functools.partial(set_process_limits, rlimits or ()),
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            )
+
+        if slug:
+            log.info("Executed jailed code %s in %s, with PID %s", slug, cwd, subproc.pid)
+
+        try:
+            subproc.wait(TIMEOUT)
+        except:
+            # Capture the screen
+            print("Capturing image")
+            subprocess.call("DISPLAY=:{} import -window root {}".format(display_num, image), shell=True)
+
+            # Kill the child if it doesn't exit automatically
+            subproc.kill()
+
+    stdout = subproc.stdout.read()
+    stderr = subproc.stderr.read()
+
+    return subproc.returncode, stdout, stderr
+
+
+def run_subprocess(
+    cmd, stdin=None, cwd=None, env=None, rlimits=None, realtime=None,
+    slug=None,
+):
+    """
+    a helper to make a limited subprocess.
+
+    `cmd`, `cwd`, and `env` are exactly as `subprocess.popen` expects.
+
+    `stdin` is the data to write to the stdin of the subprocess.
+
+    `rlimits` is a list of tuples, the arguments to pass to
+    `resource.setrlimit` to set limits on the process.
+
+    `realtime` is the number of seconds to limit the execution of the process.
+
+    `slug` is a short identifier for use in log messages.
+
+    this function waits until the process has finished executing before
+    returning.
+
+    returns a tuple of three values: the exit status code of the process, and
     the stdout and stderr of the process, as strings.
 
     """
